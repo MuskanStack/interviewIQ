@@ -25,10 +25,12 @@ function Step1SetUp({ onStart }) {
     const [resumeText, setResumeText] = useState("");
     const [analysisDone, setAnalysisDone] = useState(false);
     const [analyzing, setAnalyzing] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
 
     const handleUploadResume = async () => {
         if (!resumeFile || analyzing) return;
+        setErrorMessage("");
         setAnalyzing(true)
 
         const formdata = new FormData()
@@ -50,11 +52,13 @@ function Step1SetUp({ onStart }) {
 
         } catch (error) {
             console.log(error)
+            setErrorMessage(error?.response?.data?.message || error.message || "Failed to analyze resume.");
             setAnalyzing(false);
         }
     }
 
     const handleStart = async () => {
+        setErrorMessage("");
         setLoading(true)
         try {
            const result = await axios.post(ServerUrl + "/api/interview/generate-questions" , {role, experience, mode , resumeText, projects, skills } , {withCredentials:true}) 
@@ -67,6 +71,9 @@ function Step1SetUp({ onStart }) {
 
         } catch (error) {
             console.log(error)
+            const message = error?.response?.data?.message || error.message || "Failed to start interview.";
+            setErrorMessage(message);
+            alert(message);
             setLoading(false)
         }
     }
@@ -173,6 +180,11 @@ function Step1SetUp({ onStart }) {
 
                         </select>
 
+                        {errorMessage && (
+                            <div className='p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 mb-4'>
+                                {errorMessage}
+                            </div>
+                        )}
                         {!analysisDone && (
                             <motion.div
                                 whileHover={{ scale: 1.02 }}
