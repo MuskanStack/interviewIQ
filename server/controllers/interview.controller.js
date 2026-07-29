@@ -77,7 +77,7 @@ Return strictly JSON:
       fs.unlinkSync(req.file.path);
     }
 
-    return res.status(500).json({ message: error.message });
+    return res.status(error.statusCode || 500).json({ message: error.message || "Resume analysis failed." });
   }
 };
 
@@ -218,7 +218,8 @@ Make questions based on the candidate’s role, experience,interviewMode, projec
       questions: interview.questions
     });
   } catch (error) {
-    return res.status(500).json({message:`failed to create interview ${error}`})
+    console.error("Create interview error:", error);
+    return res.status(error.statusCode || 500).json({ message: error.message || "Failed to create interview." });
   }
 }
 
@@ -328,7 +329,8 @@ Answer: ${answer}
 
     return res.status(200).json({feedback :parsed.feedback})
   } catch (error) {
-    return res.status(500).json({message:`failed to submit answer ${error}`})
+    console.error("Submit answer error:", error);
+    return res.status(error.statusCode || 500).json({ message: error.message || "Failed to evaluate answer." });
 
   }
 }
