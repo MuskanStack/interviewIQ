@@ -73,8 +73,19 @@ function Step1SetUp({ onStart }) {
             console.log(error)
             const message = error?.response?.data?.message || error.message || "Failed to start interview.";
             setErrorMessage(message);
-            alert(message);
             setLoading(false)
+        }
+    }
+
+    const handleAddTrialCredits = async () => {
+        try {
+            const result = await axios.post(ServerUrl + "/api/user/add-trial-credits", {}, {withCredentials:true})
+            dispatch(setUserData(result.data.user))
+            setErrorMessage("")
+        } catch (error) {
+            console.log(error)
+            const message = error?.response?.data?.message || error.message || "Failed to add credits.";
+            setErrorMessage(message);
         }
     }
     return (
@@ -181,8 +192,16 @@ function Step1SetUp({ onStart }) {
                         </select>
 
                         {errorMessage && (
-                            <div className='p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 mb-4'>
-                                {errorMessage}
+                            <div className='p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 mb-4 flex flex-col gap-3'>
+                                <p>{errorMessage}</p>
+                                {errorMessage.includes("Not enough credits") && (
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        onClick={handleAddTrialCredits}
+                                        className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition'>
+                                        Claim 100 Free Trial Credits
+                                    </motion.button>
+                                )}
                             </div>
                         )}
                         {!analysisDone && (
