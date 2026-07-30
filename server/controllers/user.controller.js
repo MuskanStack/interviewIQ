@@ -21,15 +21,20 @@ export const addTrialCredits = async (req,res) => {
         if(!user) {
             return res.status(404).json({message:"user does not found"})
         }
-        
-        if(user.credits >= 50) {
-            return res.status(400).json({message:"You already have enough credits"})
+
+        if (user.trialClaimed) {
+            return res.status(400).json({ message: "Free trial credits have already been claimed." })
         }
-        
+
+        if (user.credits >= 50) {
+            return res.status(400).json({ message: "You already have enough credits." })
+        }
+
         user.credits = 100
+        user.trialClaimed = true
         await user.save()
-        
-        return res.status(200).json({message:"100 trial credits added", user})
+
+        return res.status(200).json({ message: "100 trial credits added", user })
     } catch (error) {
          return res.status(500).json({message:`failed to add trial credits ${error}`})
     }

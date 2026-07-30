@@ -194,7 +194,7 @@ function Step1SetUp({ onStart }) {
                         {errorMessage && (
                             <div className='p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 mb-4 flex flex-col gap-3'>
                                 <p>{errorMessage}</p>
-                                {errorMessage.includes("Not enough credits") && (
+                                {errorMessage.includes("Not enough credits") && !userData?.trialClaimed && (
                                     <motion.button
                                         whileHover={{ scale: 1.02 }}
                                         onClick={handleAddTrialCredits}

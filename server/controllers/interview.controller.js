@@ -102,9 +102,9 @@ export const generateQuestion = async (req, res) => {
       });
     }
 
-    if (user.credits < 50) {
+    if (user.credits < 20) {
       return res.status(400).json({
-        message: "Not enough credits. Minimum 50 required."
+        message: "Not enough credits."
       });
     }
 
@@ -195,7 +195,7 @@ Make questions based on the candidate’s role, experience,interviewMode, projec
       });
     }
 
-    user.credits -= 50;
+    user.credits -= 20;
     await user.save();
 
     const interview = await Interview.create({

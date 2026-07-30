@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     credits:{
         type:Number,
         default:100
+    },
+    trialClaimed:{
+        type:Boolean,
+        default:false
     }
 
 }, {timestamps:true})
